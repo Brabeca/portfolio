@@ -210,6 +210,7 @@
             }
         }
         
+        /* Photo de profil - CORRECTION STABILITÉ */
         .profile-container {
             position: relative;
             width: 280px;
@@ -227,6 +228,20 @@
             box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
             transition: all 0.4s ease;
             display: block;
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--primary-bg) 100%);
+        }
+        
+        /* Fallback si l'image ne charge pas */
+        .profile-image::before {
+            content: 'CM';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            font-family: 'Playfair Display', serif;
         }
         
         .profile-container:hover .profile-image {
@@ -249,6 +264,29 @@
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 0.5; }
             50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        
+        /* Skeleton loading pour la photo */
+        .profile-skeleton {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, var(--secondary-bg) 25%, rgba(212, 175, 55, 0.1) 50%, var(--secondary-bg) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            z-index: -1;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .profile-image.loaded + .profile-skeleton {
+            display: none;
         }
         
         .hero-title {
@@ -603,6 +641,168 @@
             transform: translateY(0);
         }
         
+        /* ==========================================
+           PORTFOLIO PHOTOS STYLES
+           ========================================== */
+        
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 12px;
+            cursor: pointer;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.4s ease;
+        }
+        
+        .photo-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        
+        .photo-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-item:hover .photo-overlay {
+            transform: translateY(0);
+        }
+        
+        .photo-title {
+            color: var(--accent-gold);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .photo-category {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .lightbox.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+            animation: lightboxIn 0.3s ease;
+        }
+        
+        @keyframes lightboxIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: var(--accent-gold);
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 2001;
+            transition: color 0.3s ease;
+        }
+        
+        .lightbox-close:hover {
+            color: var(--text-light);
+        }
+        
+        .lightbox-caption {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-light);
+            text-align: center;
+            max-width: 80%;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+        }
+        
+        .lightbox-prev, .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lightbox-prev:hover, .lightbox-next:hover {
+            background: var(--accent-gold);
+            color: var(--primary-bg);
+        }
+        
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+        
+        .photo-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .hero-stats {
@@ -631,6 +831,11 @@
                 height: 220px;
             }
             
+            .profile-skeleton {
+                width: 220px;
+                height: 220px;
+            }
+            
             .contact-grid {
                 flex-direction: column;
                 align-items: center;
@@ -640,16 +845,19 @@
                 padding: 1.5rem;
             }
             
-            .dropdown-content {
-                position: static;
-                display: none;
-                box-shadow: none;
-                margin-top: 0.5rem;
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1rem;
             }
             
-            .dropdown.active .dropdown-content {
-                display: block;
+            .lightbox-prev, .lightbox-next {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
             }
+            
+            .lightbox-prev { left: 10px; }
+            .lightbox-next { right: 10px; }
         }
     </style>
 </head>
@@ -671,14 +879,15 @@
                     <a href="#softskills" class="nav-link" data-key="nav_softskills">Soft Skills</a>
                     <a href="#archives" class="nav-link" data-key="nav_archives">Archivistique</a>
                     <a href="#communication" class="nav-link" data-key="nav_communication">Communication</a>
+                    <a href="#portfolio-photos" class="nav-link" data-key="nav_portfolio">Portfolio</a>
                     <a href="#international" class="nav-link" data-key="nav_international">International</a>
                     <a href="#contact" class="nav-link" data-key="nav_contact">Contact</a>
                     
                     <!-- Menu Portfolio déroulant -->
                     <div class="dropdown">
-                        <a href="#" class="nav-link" data-key="nav_portfolio">Portfolio ▼</a>
+                        <a href="#" class="nav-link" style="pointer-events: none;">▼</a>
                         <div class="dropdown-content">
-                            <a href="portfolio-photos.html" data-key="nav_photos">Photos</a>
+                            <a href="#portfolio-photos" data-key="nav_photos">Photos</a>
                             <a href="portfolio-visuels.html" data-key="nav_visuels">Visuels</a>
                             <a href="portfolio-videos.html" data-key="nav_videos">Vidéos</a>
                         </div>
@@ -698,7 +907,15 @@
         <div class="hero-content">
             <div class="profile-container">
                 <div class="profile-ring"></div>
-                <img src="photo_profil.jpeg" alt="Carla Mathias De Simone" class="profile-image" id="profile-img" width="280" height="280">
+                <div class="profile-skeleton"></div>
+                <img src="photo_profil.jpeg" 
+                     alt="Carla Mathias De Simone" 
+                     class="profile-image" 
+                     id="profile-img" 
+                     width="280" 
+                     height="280"
+                     onload="this.classList.add('loaded')"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22280%22%3E%3Crect width=%22280%22 height=%22280%22 fill=%22%231e293b%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23d4af37%22 font-family=%22serif%22 font-size=%2260%22 font-weight=%22bold%22%3ECM%3C/text%3E%3C/svg%3E'">
             </div>
             
             <h1 class="hero-name font-serif">Carla Mathias De Simone</h1>
@@ -968,6 +1185,27 @@
         </div>
     </section>
 
+    <!-- ==========================================
+         SECTION PORTFOLIO PHOTOS DYNAMIQUE
+         ========================================== -->
+    <section id="portfolio-photos" class="fade-in">
+        <h2 class="section-title font-serif" data-key="portfolio_photos_title">Portfolio Photos</h2>
+        
+        <!-- Grille de photos générée dynamiquement -->
+        <div id="photo-grid" class="photo-grid">
+            <div class="photo-loading">Chargement du portfolio...</div>
+        </div>
+        
+        <!-- Lightbox pour affichage plein écran -->
+        <div id="lightbox" class="lightbox">
+            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+            <img class="lightbox-content" id="lightbox-img" alt="">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+            <button class="lightbox-prev" onclick="navigateLightbox(-1)">&#10094;</button>
+            <button class="lightbox-next" onclick="navigateLightbox(1)">&#10095;</button>
+        </div>
+    </section>
+
     <!-- International Experience -->
     <section id="international" class="fade-in">
         <h2 class="section-title font-serif" data-key="intl_title">Expérience Internationale</h2>
@@ -1053,10 +1291,151 @@
     </footer>
 
     <script>
-        // Initialize Lucide icons
+        // ==========================================
+        // INITIALISATION DES ICÔNES
+        // ==========================================
         lucide.createIcons();
 
-        // Translations
+        // ==========================================
+        // CONFIGURATION DU PORTFOLIO PHOTOS
+        // ==========================================
+        
+        // AJOUTEZ VOS PHOTOS ICI
+        const portfolioPhotos = [
+            {
+                src: 'photos/photo1.jpg',
+                title: 'Portrait Corporate',
+                category: 'Portrait'
+            },
+            {
+                src: 'photos/photo2.jpg',
+                title: 'Événement Professionnel',
+                category: 'Événement'
+            },
+            {
+                src: 'photos/photo3.jpg',
+                title: 'Architecture Moderne',
+                category: 'Architecture'
+            },
+            {
+                src: 'photos/photo4.jpg',
+                title: 'Reportage Documentaire',
+                category: 'Documentaire'
+            },
+            {
+                src: 'photos/photo5.jpg',
+                title: 'Nature et Paysage',
+                category: 'Paysage'
+            },
+            {
+                src: 'photos/photo6.jpg',
+                title: 'Photographie Urbaine',
+                category: 'Urbain'
+            }
+            // Ajoutez autant de photos que nécessaire
+        ];
+
+        let currentPhotoIndex = 0;
+
+        // Initialisation de la galerie photos
+        function initPhotoGallery() {
+            const grid = document.getElementById('photo-grid');
+            
+            if (!grid || portfolioPhotos.length === 0) {
+                if (grid) {
+                    grid.innerHTML = '<div class="text-center text-gray-400 py-12">Portfolio en cours de mise à jour</div>';
+                }
+                return;
+            }
+            
+            // Vider la grille
+            grid.innerHTML = '';
+            
+            // Générer les éléments photo
+            portfolioPhotos.forEach((photo, index) => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item';
+                photoItem.onclick = () => openLightbox(index);
+                
+                // Image avec gestion d'erreur
+                const img = document.createElement('img');
+                img.src = photo.src;
+                img.alt = photo.title;
+                img.loading = 'lazy';
+                img.onerror = function() {
+                    // Image de remplacement si le fichier n'existe pas
+                    this.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22%3E%3Crect width=%22400%22 height=%22400%22 fill=%22%231e293b%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23d4af37%22 font-family=%22sans-serif%22 font-size=%2218%22%3E' + encodeURIComponent(photo.title) + '%3C/text%3E%3C/svg%3E';
+                };
+                
+                const overlay = document.createElement('div');
+                overlay.className = 'photo-overlay';
+                overlay.innerHTML = `
+                    <div class="photo-title">${photo.title}</div>
+                    <div class="photo-category">${photo.category}</div>
+                `;
+                
+                photoItem.appendChild(img);
+                photoItem.appendChild(overlay);
+                grid.appendChild(photoItem);
+            });
+        }
+
+        // Lightbox functions
+        function openLightbox(index) {
+            currentPhotoIndex = index;
+            updateLightbox();
+            
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function navigateLightbox(direction) {
+            currentPhotoIndex += direction;
+            
+            // Boucler
+            if (currentPhotoIndex >= portfolioPhotos.length) {
+                currentPhotoIndex = 0;
+            } else if (currentPhotoIndex < 0) {
+                currentPhotoIndex = portfolioPhotos.length - 1;
+            }
+            
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            const photo = portfolioPhotos[currentPhotoIndex];
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            
+            lightboxImg.src = photo.src;
+            lightboxCaption.innerHTML = `<strong>${photo.title}</strong><br>${photo.category}`;
+        }
+
+        // Fermer lightbox avec Escape
+        document.addEventListener('keydown', (e) => {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox && lightbox.classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    navigateLightbox(-1);
+                } else if (e.key === 'ArrowRight') {
+                    navigateLightbox(1);
+                }
+            }
+        });
+
+        // ==========================================
+        // TRADUCTIONS MULTILINGUES
+        // ==========================================
+        
         const translations = {
             fr: {
                 nav_softskills: "Soft Skills",
@@ -1144,6 +1523,7 @@
                 crisis_2: "Anticipation des risques",
                 crisis_3: "Minimisation des impacts négatifs",
                 software_title: "Logiciels Maîtrisés",
+                portfolio_photos_title: "Portfolio Photos",
                 intl_title: "Expérience Internationale",
                 brazil_desc: "Brésilienne d'origine, j'ai également vécu en Belgique et au Canada, ce qui a forgé mon trilinguisme et ma sensibilité interculturelle naturelle.",
                 canada_desc: "Établie au Canada, je m'intègre au marché professionnel québécois tout en apportant une perspective internationale unique.",
@@ -1170,7 +1550,7 @@
                 nav_photos: "Photos",
                 nav_visuels: "Visuals",
                 nav_videos: "Videos",
-                hero_title: "Trilangual professional with over 15 years of experience, I connect organizations to their audiences — and knowledge to memory.",
+                hero_title: "Trilingual professional with over 15 years of experience, I connect organizations to their audiences — and knowledge to memory.",
                 continent_na: "North America",
                 continent_sa: "South America",
                 continent_eu: "Europe",
@@ -1246,6 +1626,7 @@
                 crisis_2: "Risk anticipation",
                 crisis_3: "Minimize negative impacts",
                 software_title: "Software Proficiency",
+                portfolio_photos_title: "Photo Portfolio",
                 intl_title: "International Experience",
                 brazil_desc: "Originally from Brazil, I have also lived in Belgium and Canada, which forged my trilingualism and natural intercultural sensitivity.",
                 canada_desc: "Based in Canada, I integrate into the Quebec professional market while bringing a unique international perspective.",
@@ -1272,7 +1653,7 @@
                 nav_photos: "Fotos",
                 nav_visuels: "Visuais",
                 nav_videos: "Vídeos",
-                hero_title: "Profissional trilingue com mais de 15 anos de experiência, conecto organizações aos seus públicos — e conhecimentos à memória.",
+                hero_title: "Profissional trilíngue com mais de 15 anos de experiência, conecto organizações aos seus públicos — e conhecimentos à memória.",
                 continent_na: "América do Norte",
                 continent_sa: "América do Sul",
                 continent_eu: "Europa",
@@ -1348,6 +1729,7 @@
                 crisis_2: "Antecipação de riscos",
                 crisis_3: "Minimização de impactos negativos",
                 software_title: "Softwares Dominados",
+                portfolio_photos_title: "Portfólio de Fotos",
                 intl_title: "Experiência Internacional",
                 brazil_desc: "Brasileira de origem, também vivi na Bélgica e no Canadá, o que forjou meu trilinguísmo e minha sensibilidade intercultural natural.",
                 canada_desc: "Baseada no Canadá, integro-me ao mercado profissional quebequense trazendo uma perspectiva internacional única.",
@@ -1390,7 +1772,7 @@
             // Update HTML lang attribute
             document.documentElement.lang = lang;
             
-            // Reinitialize icons for dynamic content
+            // Reinitialize icons
             lucide.createIcons();
         }
 
@@ -1413,9 +1795,10 @@
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                if(this.getAttribute('href') !== '#') {
+                const href = this.getAttribute('href');
+                if(href !== '#') {
                     e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
+                    const target = document.querySelector(href);
                     if(target) {
                         target.scrollIntoView({
                             behavior: 'smooth',
@@ -1442,6 +1825,28 @@
                     link.classList.add('active');
                 }
             });
+        });
+
+        // ==========================================
+        // INITIALISATION AU CHARGEMENT
+        // ==========================================
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialiser les icônes
+            lucide.createIcons();
+            
+            // Initialiser la galerie photos
+            initPhotoGallery();
+            
+            // Précharger l'image de profil pour éviter les délais
+            const profileImg = document.getElementById('profile-img');
+            if (profileImg) {
+                const img = new Image();
+                img.onload = () => {
+                    profileImg.classList.add('loaded');
+                };
+                img.src = profileImg.src;
+            }
         });
     </script>
 </body>
