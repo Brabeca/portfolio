@@ -1,0 +1,12 @@
+[
+    {
+        "src": "photos/photo1.jpg",
+        "title": "Portrait Corporate",
+        "category": "Portrait"
+    },
+    {
+        "src": "photos/photo2.jpg",
+        "title": "Événement 2024",
+        "category": "Événement"
+    }
+]
