@@ -119,13 +119,14 @@
         }
         
         .carousel-slide {
-            flex: 0 0 calc(33.333% - 0.667rem);
-            aspect-ratio: 4/3;
+            flex: 0 0 calc(25% - 0.75rem);  /* 4 photos par ligne */
+            aspect-ratio: 16/9;  /* Plus panoramique = moins haut */
             position: relative;
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
         }
+
         
         .carousel-slide img {
             width: 100%;
